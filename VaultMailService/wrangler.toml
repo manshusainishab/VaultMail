@@ -1,0 +1,33 @@
+name = "vaultmail"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers AI binding
+[ai]
+binding = "AI"
+
+# R2 bucket for encrypted email summaries
+[[r2_buckets]]
+binding = "VAULT"
+bucket_name = "vaultmail-summaries"
+
+# KV for OAuth tokens, email metadata, priority tags
+[[kv_namespaces]]
+binding = "META"
+id = "04bc1d6fa99b4e4b908384ccba571d94"
+
+# Durable Object for per-user session state
+[[durable_objects.bindings]]
+name = "USER_STATE"
+class_name = "UserState"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["UserState"]
+
+# Vars
+[vars]
+GOOGLE_CLIENT_ID = "947729347152-ki5ve5hook53ht909ci9e9jr21f12ggs.apps.googleusercontent.com"
+AI_GATEWAY_ID = "vaultmail-gateway"
+APP_URL = "https://vaultmail.manshupallav.workers.dev"

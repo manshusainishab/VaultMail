@@ -1,0 +1,19 @@
+{
+  "name": "vaultmail",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "kv:create": "wrangler kv:namespace create META",
+    "r2:create": "wrangler r2 bucket create vaultmail-summaries",
+    "secret:google": "wrangler secret put GOOGLE_CLIENT_SECRET",
+    "secret:enc": "node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\" | xargs -I{} sh -c 'echo {} | wrangler secret put ENCRYPTION_KEY'"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^3.80.0"
+  }
+}

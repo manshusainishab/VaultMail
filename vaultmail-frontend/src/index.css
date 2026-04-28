@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background-image:
+      radial-gradient(at 20% 0%, rgba(246, 130, 31, 0.04) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(246, 130, 31, 0.03) 0px, transparent 50%);
+    min-height: 100vh;
+  }
+  ::selection {
+    background: #f6821f;
+    color: white;
+  }
+}
+
+@layer components {
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] uppercase tracking-wider;
+  }
+  .pill-urgent { @apply bg-red-50 text-red-900 ring-1 ring-red-200; }
+  .pill-important { @apply bg-flame-bg text-flame-dim ring-1 ring-flame/30; }
+  .pill-normal { @apply bg-ink-100 text-ink-700 ring-1 ring-ink-100; }
+  .pill-low { @apply bg-ink-50 text-ink-500 ring-1 ring-ink-100; }
+  .pill-action { @apply bg-sage/10 text-sage ring-1 ring-sage/30; }
+
+  .pill-cat-work { @apply bg-blue-50 text-blue-900 ring-1 ring-blue-200; }
+  .pill-cat-personal { @apply bg-plum/10 text-plum ring-1 ring-plum/30; }
+  .pill-cat-finance { @apply bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200; }
+  .pill-cat-newsletter { @apply bg-ink-100 text-ink-700 ring-1 ring-ink-200; }
+  .pill-cat-spam { @apply bg-red-50 text-red-900 ring-1 ring-red-200; }
+  .pill-cat-other { @apply bg-ink-100 text-ink-700 ring-1 ring-ink-200; }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-md bg-ink-900 text-ink-50 font-medium transition-all hover:bg-flame hover:text-white active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-ink-700 hover:bg-ink-100 transition-colors text-sm;
+  }
+  .card {
+    @apply bg-white rounded-lg ring-1 ring-ink-100;
+  }
+}
