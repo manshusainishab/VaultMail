@@ -2,6 +2,8 @@
 
 Privacy-first AI email triage. Your inbox never leaves Cloudflare's edge.
 
+# For access as a test user please mail manshupallav@gmail.com
+
 **Live:** https://vaultmail.manshupallav.workers.dev
 
 ## What it does
