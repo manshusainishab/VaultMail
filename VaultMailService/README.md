@@ -2,79 +2,37 @@
 
 Privacy-first AI email triage. Your inbox never leaves Cloudflare's edge.
 
-## What it is
+**Live:** https://vaultmail.manshupallav.workers.dev
 
-VaultMail connects to your Gmail (read-only), pulls recent emails, and uses Workers AI (Llama 3.1 8B) to triage them — priority, category, summary, suggested action — entirely at the edge. The email body is processed inside a Cloudflare Worker, summarized, encrypted with AES-GCM, and stored in R2. **No external AI vendor (OpenAI, Anthropic, Google AI) is ever called.** AI Gateway provides a verifiable audit log proving this.
+## What it does
 
-## Why Cloudflare
+Connects to your Gmail (read-only), uses AI to triage your emails — priority, category, summary, suggested action — without sending a single byte to OpenAI, Anthropic, or Google AI.
 
-This product is impossible without Cloudflare's stack:
+## Why it exists
 
-- **Workers AI** runs Llama 3.1 8B at the edge — no GPU bills, no vendor lock-in, no data leaving the network. The "smarter, runs everywhere, no vendor in the loop" pitch only exists because Workers AI does.
-- **AI Gateway** gives users a real-time audit dashboard. Every AI call is logged with provider, latency, and cost. The transparency claim is verifiable, not marketing.
-- **R2 zero-egress** means encrypted summaries are stored cheaply and read instantly without per-GB costs.
-- **KV** holds OAuth tokens and email metadata with sub-10ms reads from any POP.
-- **Durable Objects** prevent concurrent sync races per user.
-- **Pages** hosts the UI on the same edge network — no CORS theater.
+Every existing AI email assistant requires giving a third-party AI vendor full inbox access. For lawyers, doctors, founders, journalists — anyone with privileged information — that's a non-starter. VaultMail is the third option.
 
-A reviewer cannot replace Cloudflare with AWS+OpenAI here without breaking the privacy guarantee.
+## How it works
 
-## Architecture
+The entire AI pipeline runs on Cloudflare's edge:
 
-User → Gmail OAuth → Worker (orchestrator) → Workers AI (triage) → R2 (encrypted summary) + KV (metadata).
-AI Gateway sits between Worker and Workers AI for audit + caching.
+- **Workers AI** runs Llama 3.1 8B for triage at the edge
+- **AI Gateway** logs every AI call as a verifiable audit trail
+- **R2** stores AES-GCM-256 encrypted summaries
+- **KV** holds OAuth tokens and email metadata
+- **Durable Objects** serialize per-user syncs
 
-## 24-hour setup
-
-```bash
-# 1. Install
-npm install
-npm install -g wrangler
-
-# 2. Auth Cloudflare
-wrangler login
-
-# 3. Create infrastructure
-wrangler kv:namespace create META          # paste id into wrangler.toml
-wrangler r2 bucket create vaultmail-summaries
-
-# 4. Create AI Gateway (one-time, in dashboard)
-# Dashboard → AI → AI Gateway → Create → name: vaultmail-gateway
-
-# 5. Set secrets
-wrangler secret put GOOGLE_CLIENT_SECRET   # from Google Cloud console
-wrangler secret put ENCRYPTION_KEY         # paste a base64 32-byte key
-
-# 6. Generate encryption key
-node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
-
-# 7. Set Google OAuth
-# console.cloud.google.com → APIs & Services → OAuth consent (External, Test mode)
-# → add yourself as test user → Credentials → Create OAuth client (Web app)
-# → Authorized redirect URI: https://vaultmail.YOURNAME.workers.dev/auth/callback
-# Paste client ID into wrangler.toml GOOGLE_CLIENT_ID var
-
-# 8. Run locally
-wrangler dev
-
-# 9. Deploy
-wrangler deploy
-```
-
-## Endpoints
-
-- `GET /api/health` — sanity check, returns edge POP
-- `GET /auth/start` — kick off Gmail OAuth
-- `GET /auth/callback` — OAuth callback
-- `GET /api/sync` — pull last 20 emails, triage, store
-- `GET /api/inbox` — list triaged emails
-- `GET /api/email/:id` — full detail incl. decrypted summary
-- `GET /api/transparency` — privacy guarantees + AI Gateway link
+The email body is processed in-memory inside a Worker and discarded. No external AI vendor ever sees your inbox.
 
 ## Privacy guarantees
 
-1. Email body never leaves Cloudflare's network
-2. No third-party AI vendor is called (verify in AI Gateway logs)
-3. Summaries encrypted at rest in R2 (AES-GCM-256)
-4. OAuth scope is `gmail.readonly` only — VaultMail cannot send, modify, or delete email
-5. Source code public — verify the boundary yourself
+- No email body is ever sent to any third-party AI provider
+- All inference runs on Cloudflare Workers AI at the edge
+- AI Gateway logs every call — verifiable audit trail
+- Summaries encrypted with AES-GCM-256 before R2 write
+- OAuth scope: `gmail.readonly` only — VaultMail cannot send, modify, or delete email
+- Source code is open. Verify the boundary yourself.
+
+## Run it yourself
+
+See [SETUP.md](./SETUP.md) for the development setup.
