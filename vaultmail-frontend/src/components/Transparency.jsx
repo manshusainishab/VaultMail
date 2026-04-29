@@ -43,7 +43,7 @@ export default function Transparency({ onBack }) {
           <p className="mt-1 text-ink-500 text-sm">See every AI call we made. Provider column proves "workers-ai" only.</p>
         </a>
         <a
-          href="https://github.com/YOURNAME/vaultmail"
+          href="https://github.com/manshusainishab/VaultMail"
           target="_blank"
           rel="noreferrer"
           className="card p-6 hover:ring-flame/40 transition-all"

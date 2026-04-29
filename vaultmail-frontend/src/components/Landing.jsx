@@ -20,7 +20,7 @@ function Header() {
     <header className="px-6 lg:px-12 py-5 flex items-center justify-between border-b border-ink-100">
       <Logo />
       <a
-        href="https://github.com/YOURNAME/vaultmail"
+        href="https://github.com/manshusainishab/VaultMail"
         target="_blank"
         rel="noreferrer"
         className="font-mono text-xs text-ink-500 hover:text-ink-900 transition-colors"

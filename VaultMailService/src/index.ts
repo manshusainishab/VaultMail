@@ -93,7 +93,7 @@ export default {
           ],
           ai_gateway_dashboard: `https://dash.cloudflare.com/?to=/:account/ai/ai-gateway/${env.AI_GATEWAY_ID}`,
           edge_pop: req.cf?.colo,
-          source: 'https://github.com/YOURNAME/vaultmail',
+          source: 'https://github.com/manshusainishab/VaultMail',
         });
       }
 

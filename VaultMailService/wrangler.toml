@@ -3,6 +3,12 @@ main = "src/index.ts"
 compatibility_date = "2025-04-01"
 compatibility_flags = ["nodejs_compat"]
 
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*", "/auth/*"]
+
 # Workers AI binding
 [ai]
 binding = "AI"
@@ -24,10 +30,11 @@ class_name = "UserState"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["UserState"]
+new_sqlite_classes = ["UserState"]
 
 # Vars
 [vars]
 GOOGLE_CLIENT_ID = "947729347152-ki5ve5hook53ht909ci9e9jr21f12ggs.apps.googleusercontent.com"
 AI_GATEWAY_ID = "vaultmail-gateway"
 APP_URL = "https://vaultmail.manshupallav.workers.dev"
+FRONTEND_URL = "https://vaultmail.manshupallav.workers.dev"
