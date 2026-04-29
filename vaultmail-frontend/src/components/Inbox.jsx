@@ -20,6 +20,7 @@ export default function Inbox({ onOpen, onLogout }) {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
+  const [syncMessage, setSyncMessage] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -38,11 +39,21 @@ export default function Inbox({ onOpen, onLogout }) {
   async function sync() {
     setSyncing(true);
     setError(null);
+    // Show a heads-up toast for the first sync — cold edge + sequential AI calls
+    // means it can take 30-60 seconds. Subsequent syncs are fast.
+    const isFirstSync = (metrics?.total_synced ?? 0) === 0;
+    if (isFirstSync) {
+      setSyncMessage(`First sync warms up the edge and runs ${syncCount} AI calls — this can take ${Math.ceil(syncCount * 2.5)}s. After this, syncs are fast.`);
+    } else {
+      setSyncMessage(null);
+    }
     try {
       await api.sync(syncCount);
       await load();
+      setSyncMessage(null);
     } catch (e) {
       setError(e.message);
+      setSyncMessage(null);
     } finally {
       setSyncing(false);
     }
@@ -124,6 +135,13 @@ export default function Inbox({ onOpen, onLogout }) {
               {error.includes('401') && (
                 <a href={api.authStartUrl()} className="ml-2 underline">Connect Gmail</a>
               )}
+            </div>
+          )}
+
+          {syncMessage && (
+            <div className="mt-6 p-4 rounded-md bg-flame-bg ring-1 ring-flame/30 text-sm text-flame-dim flex items-start gap-3">
+              <Loader2 size={16} className="animate-spin mt-0.5 shrink-0" />
+              <span>{syncMessage}</span>
             </div>
           )}
 
