@@ -24,6 +24,10 @@ The entire AI pipeline runs on Cloudflare's edge:
 
 The email body is processed in-memory inside a Worker and discarded. No external AI vendor ever sees your inbox.
 
+**Live:** https://vaultmail.manshupallav.workers.dev
+
+![Architecture](./arch.png)
+
 ## Privacy guarantees
 
 - No email body is ever sent to any third-party AI provider
