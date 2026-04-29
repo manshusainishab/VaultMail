@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { Lock, Zap, Eye } from 'lucide-react';
 import { api } from '../lib/api';
+import RequestAccessModal from './RequestAccessModal.jsx';
 
 export default function Landing() {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <Hero />
+        <Hero onRequestAccess={() => setModalOpen(true)} />
         <ProofStrip />
         <Features />
         <Footer />
       </main>
+      <RequestAccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
@@ -42,7 +46,7 @@ export function Logo() {
   );
 }
 
-function Hero() {
+function Hero({ onRequestAccess }) {
   return (
     <section className="px-6 lg:px-12 pt-20 lg:pt-28 pb-16 max-w-6xl mx-auto">
       <p className="font-mono text-xs text-flame uppercase tracking-widest mb-6">
@@ -59,6 +63,12 @@ function Hero() {
           Connect Gmail
           <span className="font-mono text-xs opacity-60">read-only</span>
         </a>
+        <button
+          onClick={onRequestAccess}
+          className="font-mono text-xs text-ink-500 hover:text-flame transition-colors underline underline-offset-4 decoration-ink-300"
+        >
+          request test user access
+        </button>
         <a
           href="#how"
           className="font-mono text-xs text-ink-500 hover:text-ink-900 underline underline-offset-4 decoration-ink-300"
